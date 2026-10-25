@@ -187,8 +187,8 @@
     :focus-visible { outline: 2px solid var(--sun); outline-offset: 3px; }
 
     /* ---------- abertura rápida ---------- */
-    .intro { position: fixed; inset: 0; z-index: 100; background: var(--ink); display: grid; place-items: center; animation: introOut 0.7s var(--ease) 0.85s forwards; }
-    .intro-in { display: grid; justify-items: center; gap: 12px; color: var(--shell); animation: introIn 0.65s var(--ease) both; }
+    .intro { position: fixed; inset: 0; z-index: 100; background: var(--ink); display: grid; place-items: center; animation: introOut 0.5s var(--ease) 0.35s forwards; pointer-events: none; }
+    .intro-in { display: grid; justify-items: center; gap: 12px; color: var(--shell); animation: introIn 0.4s var(--ease) both; }
     .intro-in b { font-family: var(--display); font-size: 1.85rem; font-weight: 700; letter-spacing: -0.02em; }
     .intro-in b em { font-family: var(--serif); font-weight: 400; color: var(--sun-soft); font-size: 1.12em; }
     .intro-wave { width: 140px; height: 18px; }
@@ -229,7 +229,8 @@
     /* ---------- hero 4K 100% limpo com contraste forte ---------- */
     .hero { position: relative; min-height: 100svh; display: flex; align-items: flex-end; overflow: hidden; background: var(--ink); color: var(--shell); }
     .hero-media { position: absolute; inset: 0; overflow: hidden; }
-    .hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: 52% 35%; animation: kenburns 2.6s var(--ease) both; will-change: transform; }
+    .hero-media picture, .hero-media img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 52% 28%; }
+    .hero-media img { animation: kenburns 2.6s var(--ease) both; will-change: transform; }
     @keyframes kenburns { from { transform: scale(1.12); } to { transform: scale(1.02); } }
     .hero-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11, 46, 43, 0.35) 0%, rgba(11, 46, 43, 0) 24%, rgba(11, 46, 43, 0.08) 46%, rgba(11, 46, 43, 0.9) 100%); }
     .hero-body { position: relative; width: 100%; padding-top: 120px; padding-bottom: 48px; }
@@ -272,10 +273,10 @@
     .sec-sub { margin-top: 12px; color: var(--ink-soft); max-width: 44ch; }
     .deep .sec-sub { color: rgba(250, 246, 238, 0.78); }
 
-    .js .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.75s var(--ease), transform 0.75s var(--ease); transition-delay: var(--d, 0ms); }
+    .js .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); transition-delay: 0ms; }
     .js .reveal.in { opacity: 1; transform: none; }
     .photo { position: relative; overflow: hidden; border-radius: 24px; background: var(--sand-2); }
-    .photo img { width: 100%; height: 100%; object-fit: cover; }
+    .photo picture, .photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
     .photo [data-par] { height: 112%; margin-top: -6%; will-change: transform; }
     .js .clip { clip-path: inset(8% 6% 8% 6% round 24px); transition: clip-path 1.2s var(--ease); }
     .js .clip.in { clip-path: inset(0); }
@@ -370,7 +371,7 @@
     /* ---------- final ---------- */
     .final { position: relative; overflow: hidden; color: var(--shell); text-align: center; padding: 120px 0 110px; background: var(--ink); }
     .final-bg { position: absolute; inset: -8% 0; }
-    .final-bg img { width: 100%; height: 100%; object-fit: cover; }
+    .final-bg picture, .final-bg img { display: block; width: 100%; height: 100%; object-fit: cover; }
     .final::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11, 46, 43, 0.55), rgba(11, 46, 43, 0.4) 45%, rgba(11, 46, 43, 0.88)); }
     .final .wrap { position: relative; z-index: 2; display: grid; justify-items: center; gap: 16px; }
     .final .eyebrow { color: rgba(250, 246, 238, 0.88); }
@@ -780,7 +781,7 @@
             (el.__clips || []).forEach(function (c) { c.classList.add('in'); });
             io.unobserve(el);
           });
-        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+        }, { rootMargin: '0px 0px 10% 0px', threshold: 0.01 });
         els.forEach(function (el) {
           if (el.classList.contains('clip')) { var h = el.parentElement; (h.__clips = h.__clips || []).push(el); io.observe(h); }
           if (el.matches('.reveal, .reveal-wave')) io.observe(el);
@@ -790,9 +791,14 @@
       var pending = Array.prototype.slice.call(els), sweeping = false;
       function sweep() {
         sweeping = false;
-        var lim = window.innerHeight * 0.95;
+        var lim = window.innerHeight * 1.05;
         pending = pending.filter(function (el) {
-          if (el.getBoundingClientRect().top < lim) { el.classList.add('in'); return false; }
+          var rect = el.getBoundingClientRect();
+          if (rect.top < lim) {
+            el.classList.add('in');
+            if (el.classList.contains('clip') && el.parentElement) el.parentElement.classList.add('in');
+            return false;
+          }
           return true;
         });
         if (!pending.length) window.removeEventListener('scroll', onSweep);
