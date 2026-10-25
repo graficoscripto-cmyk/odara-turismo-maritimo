@@ -273,12 +273,12 @@
     .sec-sub { margin-top: 12px; color: var(--ink-soft); max-width: 44ch; }
     .deep .sec-sub { color: rgba(250, 246, 238, 0.78); }
 
-    .js .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); transition-delay: 0ms; }
+    .js .reveal { opacity: 1; transform: none; transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
     .js .reveal.in { opacity: 1; transform: none; }
     .photo { position: relative; overflow: hidden; border-radius: 24px; background: var(--sand-2); }
     .photo picture, .photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
     .photo [data-par] { height: 112%; margin-top: -6%; will-change: transform; }
-    .js .clip { clip-path: inset(8% 6% 8% 6% round 24px); transition: clip-path 1.2s var(--ease); }
+    .js .clip { clip-path: inset(0); transition: clip-path 1.2s var(--ease); }
     .js .clip.in { clip-path: inset(0); }
 
     /* ---------- Apresentação Odara (abaixo da 1ª dobra) ---------- */
